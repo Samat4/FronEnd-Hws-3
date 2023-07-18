@@ -24,6 +24,10 @@ if (modal.style.display === 'block') {
     clearTimeout(autoOpenModal)
 }
 
+
+
+// C этой частью помог ментор
+
 const scroll = () => {
     if ((window.scrollY + window.innerHeight) >= document.body.offsetHeight) {
         openModal()
