@@ -1,0 +1,39 @@
+body {
+    text-align: center;
+}
+
+.users {
+    display: flex;
+    width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.userCard {
+    width: 250px;
+    padding: 10px;
+    border: 1px solid black;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+}
+
+.btn {
+    margin: 20px 0 40px;
+    width: 150px;
+    height: 60px;
+}
+
+.secondBtn {
+    margin: 20px 0 40px;
+    width: 150px;
+    height: 60px;
+}
