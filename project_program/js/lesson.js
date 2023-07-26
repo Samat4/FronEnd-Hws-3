@@ -21,6 +21,7 @@ phoneCheck.addEventListener('click', () => {
 const tabContent = document.querySelectorAll('.tab_content_block')
 const tabsParent = document.querySelector('.tab_content_items')
 const tabs = document.querySelectorAll('.tab_content_item')
+let currentTab = 0
 
 const hideTabContent = () => {
     tabContent.forEach((element) => {
@@ -36,8 +37,16 @@ const showTabContent = (index = 0) => {
     tabs[index].classList.add('tab_content_item_active')
 }
 
+const switchTab = () => {
+    hideTabContent()
+    currentTab = (currentTab + 1) % tabs.length
+    showTabContent(currentTab)
+}
+
 hideTabContent()
 showTabContent()
+setInterval(switchTab, 3000)
+
 
 tabsParent.onclick = (event) => {
     const targetElement = event.target
@@ -45,68 +54,45 @@ tabsParent.onclick = (event) => {
         tabs.forEach((tab, tabIndex) => {
             if (targetElement === tab) {
                 hideTabContent()
-                showTabContent(tabIndex)
+                currentTab = tabIndex
+                showTabContent(currentTab)
             }
         })
     }
 }
 
 
+// CONVERTER
 
+const som = document.querySelector('#som')
+const usd = document.querySelector('#usd')
+const eur = document.querySelector('#eur')
 
-
-// Это я написал сам. Очень длинный код получился.
-const startTabSlider = () => {
-    if (tabs[0].classList.contains('tab_content_item_active')) {
-        tabs[0]++
-        tabs[0].classList.remove('tab_content_item_active')
-        tabs[1].classList.add('tab_content_item_active')
-        tabContent[0].style.display = 'none'
-        tabContent[1].style.display = 'block'
-    } else if (tabs[1].classList.contains('tab_content_item_active')) {
-        tabs[1]++
-        tabs[1].classList.remove('tab_content_item_active')
-        tabs[2].classList.add('tab_content_item_active')
-        tabContent[1].style.display = 'none'
-        tabContent[2].style.display = 'block'
-    } else if (tabs[2].classList.contains('tab_content_item_active')) {
-        tabs[2]++
-        tabs[2].classList.remove('tab_content_item_active')
-        tabs[3].classList.add('tab_content_item_active')
-        tabContent[2].style.display = 'none'
-        tabContent[3].style.display = 'block'
-    } else if (tabs[3].classList.contains('tab_content_item_active')) {
-        tabs[3]++
-        tabs[3].classList.remove('tab_content_item_active')
-        tabs[4].classList.add('tab_content_item_active')
-        tabContent[3].style.display = 'none'
-        tabContent[4].style.display = 'block'
-    } else if (tabs[4].classList.contains('tab_content_item_active')) {
-        tabs[4].classList.remove('tab_content_item_active')
-        tabs[0].classList.add('tab_content_item_active')
-        tabContent[4].style.display = 'none'
-        tabContent[0].style.display = 'block'
+const convert = (element, target, target2, isTrue) => {
+    element.oninput = () => {
+        const request = new XMLHttpRequest()
+        request.open("GET","../data/convert.json")
+        request.setRequestHeader("Content-type","application/json")
+        request.send()
+        request.onload = () => {
+            const data = JSON.parse(request.response)
+            if (isTrue === 1) {
+                target.value = (element.value / data.usdToSom).toFixed(2)
+                target2.value = (element.value / data.eurToSom).toFixed(2)
+            } else if (isTrue === 2) {
+                target.value = (element.value * data.usdToSom).toFixed(2)
+                target2.value = (element.value / data.eurToUsd).toFixed(2)
+            } else if (isTrue === 3) {
+                target.value = (element.value * data.eurToUsd).toFixed(2)
+                target2.value = (element.value * data.eurToSom).toFixed(2)
+            }
+            element.value === '' && (target.value = '') (target2.value = '')
+        }
     }
 }
 
-setInterval(startTabSlider, 10000)
+convert(som, usd, eur, 1)
+convert(usd, som, eur,2)
+convert(eur, usd , som, 3)
 
-
-
-// А здесь я повторил ваш код AutoSlider на main.js.
-
-// const autoSlider = (index = 0) => {
-//     setInterval(() => {
-//         tabs[index].classList.remove('tab_content_item_active')
-//         tabs[index++]
-//         if (index > tabs.length - 1) {
-//             index = 0
-//         }
-//         tabs[index].classList.add('tab_content_item_active')
-//         hideTabContent()
-//         showTabContent(index)
-//     }, 1000)
-// }
-//
-// autoSlider()
 
